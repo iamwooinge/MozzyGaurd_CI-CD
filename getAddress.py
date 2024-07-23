@@ -27,3 +27,5 @@ def geocoding_reverse(lat_lng_str):
 city, district = geocoding_reverse(f"{latlng[0]}, {latlng[1]}")
 
 print(f"시: {city}, 구: {district}")
+
+# 현재 위치의 시, 구 출력하는 코드

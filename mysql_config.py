@@ -6,5 +6,5 @@ mysql_db = {
     "password": "abc1234!!",
     "host": "localhost",
     "port": 3306,
-    "database": "locations",
+    "database": "mozzy_guard_db",
 }

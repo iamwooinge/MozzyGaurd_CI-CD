@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mozzy Guard</title>
+    <link href="../static/css/userLogin.css" rel="stylesheet" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/noto-sans-kr@0.1.1/styles.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <section class="vh-100">
+        <div class="sidenav">
+            <div class="login-main-text">
+                <h2 class="shadows-into-light-regular">Mozzy Guard</h2><br>
+                <h2 class="noto">로그인 페이지</h2>
+                <!-- <p>Login or register from here to access.</p> -->
+            </div>
+        </div>
+        <div class="main">
+            <div class="col-md-6 col-sm-12">
+                <div class="login-form">
+                    <form id="loginForm" method="post" action="#">
+                        <div class="form-group">
+                            <input type="text" id="username" name="username" class="form-control noto"
+                                placeholder="사용자 아이디" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" class="form-control noto"
+                                placeholder="비밀번호" required>
+                        </div>
+                        <button type="submit" class="btn btn-black noto">로그인</button>
+                        <button type="button" class="btn btn-secondary noto"
+                            onclick="window.location.href='/signup_page'">회원가입
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Load jQuery first -->
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Then load Bootstrap -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#loginForm').on('submit', function (e) {
+                e.preventDefault(); // 기본 폼 제출 동작을 방지
+
+                var username = $('#username').val();
+                var password = $('#password').val();
+                console.log(username);
+                console.log(password);
+
+                // AJAX 요청
+                $.ajax({
+                    url: '/login',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ username: username, password: password }),
+                    success: function (response) {
+                        if (response.success) {
+                            // 성공 시 리디렉션
+                            window.location.href = '/';
+                        } else {
+                            // 실패 시 오류 메시지
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('서버와의 통신 중 오류 발생');
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>
