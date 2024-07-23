@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#mainNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    z-index: 1000;
+    /* Ensure the navbar is above other content */
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px;
+    /* Add padding for spacing */
+    margin-top: 80px;
+    /* Adjust this value based on the height of your navbar */
+}
+
+#cityButton,
+#districtButton {
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+#cityButton:lang(ko),
+#districtButton:lang(ko) {
+    font-family: 'Noto Sans KR', sans-serif; /* 한국어일 때 Noto Sans KR 폰트 적용 */
+}
+
+#cityButton:lang(en),
+#districtButton:lang(en) {
+    font-family: 'Nunito', sans-serif; /* 영어일 때 Nunito 폰트 적용 */
+}
+
+#map {
+    width: 400px;
+    height: 500px;
+    display: none;
+    /* Initial state hidden */
+}
+
+#info {
+    margin-top: 20px;
+    font-size: 16px;
+    display: none;
+    /* Initial state hidden */
+}
+
+#table {
+    width: 600px;
+    height: 500px;
+    border: #000;
+    /*display: none;*/
+    /* Initial state hidden */
+}
+
+/* Signup section styling 
+.signup-section {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+}*/
+
+.signup-section .container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.footer {
+    padding: 20px 0;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+}
+
+/* Additional text colors */
+.text-black {
+    color: black;
+}
+
+.text-blue {
+    color: blue;
+}
+
+.text-orange {
+    color: orange;
+}
+
+.text-red {
+    color: red;
+}

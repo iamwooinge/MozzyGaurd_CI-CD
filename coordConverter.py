@@ -1,10 +1,9 @@
-# 위도 경도 -> x, y 격자값 변환
-
 import math
 from getCoord import latlng
 
 NX = 149  # X축 격자점 수
 NY = 253  # Y축 격자점 수
+
 
 class LamcParameter:
     def __init__(self):
@@ -52,15 +51,17 @@ def lamcproj(lon, lat, map):
 
     return x, y
 
-def main():
+def getXY():
     map = LamcParameter()
-
-    # 위도와 경도 값을 여기서 지정
     lat = latlng[0]
     lon = latlng[1]
-
     x, y = lamcproj(lon, lat, map)
-    print(f"lon.= {lon}, lat.= {lat} ---> X = {math.floor(x + 0.5)+1}, Y = {math.floor(y + 0.5)+1}")
+    x = math.floor(x + 0.5)+1
+    y = math.floor(y + 0.5)+1
+    print(f"lon.= {lon}, lat.= {lat} ---> X = {x}, Y = {y}")
+    
+    grid = [x, y]
+    # print(grid)
+    return grid
 
-if __name__ == "__main__":
-    main()
+# 위도, 경도를 이용해 x, y 좌표 반환 grid = [x, y]
