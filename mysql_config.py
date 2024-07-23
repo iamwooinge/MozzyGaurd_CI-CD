@@ -2,8 +2,8 @@
 import pymysql.cursors
 
 mysql_db = {
-    "user": "khj",
-    "password": "100609",
+    "user": "root",
+    "password": "abc1234!!",
     "host": "localhost",
     "port": 3306,
     "database": "mozzy_guard_db",
