@@ -6,13 +6,26 @@ import joblib
 import pandas as pd
 from createUser import create_user
 import checkdLogin
+from functools import wraps
+import os
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key') 
+
 CORS(app)
 
 # 모델 및 스케일러 로드
 model = joblib.load('models/best_rf_model.pkl')
 scaler = joblib.load('models/scaler.pkl')
+
+# 로그인 상태 확인
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))  # 로그인 페이지로 리디렉션
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Get the current location based on IP address
 g = geocoder.ip('me')
@@ -75,7 +88,12 @@ def login():
     user_id = data.get('username')
     user_password = data.get('password')
     result = checkdLogin.check_login(user_id, user_password)
-    return jsonify(result)
+
+    if result.get('success'):  # 로그인 성공
+        session['user_id'] = user_id
+        return jsonify({'message': 'Login successful', 'success': True})
+    else:
+        return jsonify({'message': 'Login failed', 'success': False})
 
 @app.route('/logout')
 def logout():
@@ -85,6 +103,7 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/map')
+@login_required # 로그인 상태일 때만 접근 가능
 def map():
     return render_template('map.html')
 
