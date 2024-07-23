@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Mozzy Guard</title>
+    <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Nunito:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- 다른 메타 태그 및 CSS 파일 링크 -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../static/css/styles.css" rel="stylesheet" />
+    <link href="../static/css/styles_map.css" rel="stylesheet" />
+    <!-- cdn font -->
+    <link href="https://cdn.jsdelivr.net/npm/noto-sans-kr@0.1.1/styles.min.css" rel="stylesheet">
+    <script src="../static/js/mosq_index_img.js" defer></script>
+</head>
+
+<body id="page-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand shadows-into-light-regular" href="#page-top">Mozzy Guard</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../static/map.html">Service</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" href="/signup">SignUp</a></li> -->
+                    <li class="nav-item"><a class="nav-link" href="/">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="content">
+        <div class="left">
+            <div id="date"></div>
+            <br>
+            <div id="location">현재 <span id="city"></span> <span id="district"></span>에서</div>
+            <!--<div id="mosq"><span id="mosq_index"></span></div>-->
+            <div id="mosq">모기 지수 : <span id="mosq_prediction" style="font-size: 30px;"></span>
+            </div>
+            <br><br>
+            <div id="level">
+                <img id="mosquito-image" src="static/images/default.png" alt="Mosquito Risk Image">
+            </div>
+            <br><br>
+            <div class="dropdown d-flex justify-content-center gap-3" style="margin-bottom: 40px;">
+                <div class="text-center">
+                    <button id="cityButton" class="btn btn-secondary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        City
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="cityButton">
+                        <li><a class="dropdown-item" href="#" data-value="">선택하세요</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="강원">강원</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="경기">경기</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="경상">경상</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="광주">광주</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="대구">대구</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="대전">대전</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="부산">부산</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="서울">서울</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="세종">세종</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="울산">울산</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="인천">인천</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="전라">전라</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="제주">제주</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="충정">충정</a></li>
+                    </ul>
+                </div>
+                <div class="text-center">
+                    <button id="districtButton" class="btn btn-secondary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        District
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="districtButton">
+                        <!-- 시 항목들은 JavaScript로 동적으로 추가될 수 있음 -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="right">
+            <div id="map"></div>
+            <div id="info"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container px-4 px-lg-5">Copyright &copy; Mozzy Guard 2024</div>
+    </footer>
+
+    <!--기능-->
+    <!-- 카카오 지도 API 로드 -->
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d1a89afacced0ca0347cacea789b27fe"></script>
+
+    <!-- 현재 위치를 받아오는 스크립트 -->
+    <script src="../static/js/location.js" defer></script>
+
+    <!--현재시간 표시-->
+    <script src="../static/js/time.js" defer></script>
+
+    <!--단계별 이미지 출력-->
+    <script src="../static/js/mosq_index_img.js" defer></script>
+
+    <!--서울시 구 목록 가져오기-->
+    <script src="../static/js/districts.js" defer></script>
+
+    <!-- 카카오 지도 API 후속 작업 -->
+    <script src="../static/js/map.js" defer></script>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="../static/js/scripts.js" defer></script>
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js" defer></script>
+
+</body>
+
+</html>
