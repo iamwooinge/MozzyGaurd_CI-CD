@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mozzy Guard</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #map {
+            width: 400px;
+            height: 500px;
+        }
+
+        #info {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="left">
+        <div id="location">{{ city }}, {{ district }}</div>
+        <div id="date"></div>
+    </div>
+    <div class="right">
+        <div id="map"></div>
+        <div id="info"></div>
+    </div>
+
+    <!-- 카카오 지도 API 로드 -->
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d1a89afacced0ca0347cacea789b27fe"></script>
+    <script>
+        // 지도를 표시할 div와 옵션을 설정합니다.
+        var mapContainer = document.getElementById('map');
+        var mapOption = {
+            center: new kakao.maps.LatLng(37.5665, 126.9780), // 지도의 중심좌표 (서울시청 기준)
+            level: 10 // 지도의 확대 레벨
+        };
+
+        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+        // JSON 파일을 fetch로 불러옵니다.
+        fetch('/static/positions.json')
+            .then(response => response.json())
+            .then(data => {
+                // 불러온 데이터로 positions 배열 생성
+                const positions = data.map(item => ({
+                    title: item.title,
+                    latlng: new kakao.maps.LatLng(item.lat, item.lng)
+                }));
+
+                // 마커 이미지의 이미지 주소입니다
+                var imageSrc = "/static/img/marker.png";
+
+                // positions 배열을 순회하며 마커를 생성하고 지도에 표시합니다
+                positions.forEach(position => {
+                    var imageSize = new kakao.maps.Size(28, 35); // 마커 이미지의 크기
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
+
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: position.latlng,
+                        title: position.title,
+                        image: markerImage
+                    });
+
+                    // 마커 클릭 이벤트를 추가합니다
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        document.getElementById('info').textContent = position.title + '의 모기 활동 지수 : ';
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching positions:', error));
+    </script>
+</body>
+</html>
