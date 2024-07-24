@@ -86,6 +86,7 @@ def receive_location():
         return jsonify({'error': 'Unsupported Media Type, expected application/json'}), 415
 
     data = request.get_json()
+    print(data);
     if not data:
         return jsonify({'error': 'Invalid JSON data'}), 400
     

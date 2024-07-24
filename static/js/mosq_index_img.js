@@ -19,7 +19,7 @@ function sendPredictionRequest() {
         humidity:   parseFloat(weatherData.humidity)     // 숫자로 변환
     };
     
-    console.log('Sending Prediction Request with data:', fetchData);
+    //console.log('Sending Prediction Request with data:', fetchData);
 
 
     fetch('/predict', {
@@ -38,13 +38,13 @@ function sendPredictionRequest() {
             return response.json();
         })
         .then(data => {
-            console.log('Received Prediction Data:', data);
+            //console.log('Received Prediction Data:', data);
 
             const prediction = data.mosquito_risk_index;
             const mosquitoIndex = data.mosquito_index;
 
             document.getElementById('mosq_index').textContent = mosquitoIndex + 1 + ' 단계';
-            const formattedPrediction = prediction.toFixed(2);
+            const formattedPrediction = prediction.toFixed(4);
             document.getElementById('mosq_prediction').textContent = formattedPrediction;
 
             const mosqPredictionElement = document.getElementById('mosq_prediction');
