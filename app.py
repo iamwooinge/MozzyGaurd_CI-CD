@@ -72,6 +72,10 @@ def login_page():
 def signup_page():
     return render_template('userRegister.html')
 
+@app.route('/health')
+def health_check():
+    return 'OK', 200
+
 @app.route('/signup', methods=['POST'])
 def signup_route():
     data = request.get_json()
