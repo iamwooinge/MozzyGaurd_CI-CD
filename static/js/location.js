@@ -1,14 +1,16 @@
+// location.js
+
+let latitude, longitude;
+
 // 위치 정보를 가져오는 함수
 function success(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
 
-    // 좌표를 기반으로 주소를 가져오는 API를 호출해야 함
-    // 예시로 Nominatim (OpenStreetMap) API를 사용할 수 있음
+    // 좌표를 기반으로 주소를 가져오는 API를 호출
     fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
         .then(response => response.json())
         .then(data => {
-            //console.log(data); // API 응답을 콘솔에 출력
             const address = data.address;
             const city = address.city || address.town || address.village || 'Unknown City';
             const district = address.borough || address.neighborhood || 'Unknown District';
@@ -17,6 +19,9 @@ function success(position) {
             document.getElementById('city').textContent = city;
             document.getElementById('district').textContent = district;
             document.getElementById('location').textContent = `현재 ${city} ${district}에서 `;
+
+            // 날씨 데이터를 가져오는 함수 호출
+            fetchWeatherData(latitude, longitude);
         })
         .catch(error => {
             console.error('Error fetching address:', error);

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         tableHTML += '<thead><tr><th class="index-header">Index</th><th>개인 - 실내</th><th>개인 - 실외</th><th>기관/사회</th> </thead>';
         tableHTML += '<tbody>';
 
-        if (mosqIndex === 0) {
+        if (mosqIndex === 1) {
             tableHTML += `
                 <tr>
                     <td rowspan="2">1단계<br><br>0이상 25미만</td>
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td>모기유충 서식지 파악 및 감시</td>
                 </tr>
             `;
-        } else if (mosqIndex === 1) {
+        } else if (mosqIndex === 2) {
             tableHTML += `
                 <tr>
                     <td rowspan="4">2단계 <br><br>25이상 50미만</td>
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td>       </td>
                 </tr>
             `;
-        } else if (mosqIndex === 2) {
+        } else if (mosqIndex === 3) {
             tableHTML += `
                 <tr>
                     <td rowspan="8">3단계 <br><br>50이상 75미만</td>
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td>        </td>
                 </tr>
             `;
-        } else if (mosqIndex === 3) {
+        } else if (mosqIndex === 4) {
             tableHTML += `
                 <tr>
                     <td rowspan="8">4단계 <br><br>75이상</td>
