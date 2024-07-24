@@ -3,10 +3,13 @@ function updateDistricts(city) {
     const districtButton = document.getElementById('districtButton');
     const map = document.getElementById('map');
     const info = document.getElementById('info');
+    const table = document.getElementById('table');
+
 
     // 지도와 정보 숨기기
     map.style.display = 'none';
     info.style.display = 'none';
+    table.style.direction = 'none';
 
     if (city === '서울') {
         fetch('/static/positions.json')

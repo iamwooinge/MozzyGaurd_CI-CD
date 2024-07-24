@@ -3,9 +3,13 @@ let mapInstance; // 전역 변수로 지도 인스턴스 선언
 function showMapAndInfo(district) {
     const map = document.getElementById('map');
     const info = document.getElementById('info');
+    const table = document.getElementById('table');
+
 
     map.style.display = 'block';
     info.style.display = 'block';
+    table.style.display = 'block';
+
 
     if (!mapInstance) {
         const mapContainer = document.getElementById('map');
@@ -49,7 +53,7 @@ function showMapAndInfo(district) {
 
             // positions 배열을 순회하며 마커를 생성하고 지도에 표시합니다
             positions.forEach(position => {
-                var imageSize = new kakao.maps.Size(28, 35); // 마커 이미지의 크기
+                var imageSize = new kakao.maps.Size(40, 40); // 마커 이미지의 크기
                 var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
 
                 var marker = new kakao.maps.Marker({

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function generateTable(mosqIndex) {
         let tableHTML = '<table class="table table-striped">';
-        tableHTML += '<thead><tr><th>Index</th><th>개인 - 실내</th><th>개인 - 실외</th><th>기관/사회</th> </thead>';
+        tableHTML += '<thead><tr><th class="index-header">Index</th><th>개인 - 실내</th><th>개인 - 실외</th><th>기관/사회</th> </thead>';
         tableHTML += '<tbody>';
 
         if (mosqIndex === 0) {
@@ -124,12 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 </tr>
                 <tr>
                     <td>취침 전 샤워하기</td>
-                    <td>생활 주변 물이 고인 곳에 모기 유충 서식을 확인하고 관할 보건소 방역기동반에 적극적으로 신고</td>
                     <td>        </td>
-                </tr>
-                <tr>
-                    <td>        </td>
-                    <td>주 1회씩 가까운 대형 모기 발생원을 확인하고 보건소에 신고하여 방제 요청</td>
                     <td>        </td>
                 </tr>
             `;

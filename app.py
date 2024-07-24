@@ -123,7 +123,7 @@ def categorize_mosquito_risk(risk_index):
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-    print(data)
+    #print(data)
     year = data.get('year')
     month = data.get('month')
     day = data.get('day')
