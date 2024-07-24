@@ -5,6 +5,8 @@ from geopy.geocoders import Nominatim
 import joblib
 import pandas as pd
 from createUser import create_user
+from mysql_config import get_db_connection
+from mysql_config import mysql_db
 import checkdLogin
 from functools import wraps
 import numpy as np

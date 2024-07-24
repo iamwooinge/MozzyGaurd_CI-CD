@@ -30,8 +30,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../static/map.html">Service</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/">LogOut</a></li>
+                    {% if 'user_id' in session %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('map') }}">Service</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login_page') }}">Login</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
