@@ -1,7 +1,9 @@
 let weatherData = {}; // 날씨 데이터를 저장할 객체
 
 function fetchWeatherData(latitude, longitude) {
-    fetch('/receive_location', {
+    //console.log(latitude,longitude);
+
+        fetch('/receive_location', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -13,7 +15,7 @@ function fetchWeatherData(latitude, longitude) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Fetched weather data:', data); // 데이터 확인
+        //console.log('Fetched weather data:', data); // 데이터 확인
         // 날씨 데이터 저장
         weatherData = {
             humidity: data.humidity,
