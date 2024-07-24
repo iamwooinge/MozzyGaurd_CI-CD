@@ -9,6 +9,7 @@ from mysql_config import get_db_connection
 from mysql_config import mysql_db
 import checkdLogin
 from functools import wraps
+from coordConverter import getXY, getWeather
 import numpy as np
 
 app = Flask(__name__)
@@ -26,39 +27,6 @@ def login_required(f):
             return redirect(url_for('login'))  # 로그인 페이지로 리디렉션
         return f(*args, **kwargs)
     return decorated_function
-
-# Get the current location based on IP address
-g = geocoder.ip('me')
-
-# 위도, 경도 추출
-latlng = g.latlng
-
-# 현재 위치 위도, 경도 출력
-print(f"Latitude: {latlng[0]}, Longitude: {latlng[1]}")
-
-def geocoding_reverse(lat, lng):
-    geolocoder = Nominatim(user_agent='South Korea', timeout=None)
-    location = geolocoder.reverse((lat, lng))
-
-    if location:
-        address = location.address
-        address_parts = address.split(', ')
-        
-        # 시와 구를 저장할 변수
-        city = None
-        district = None
-        
-        # "시"와 "구"를 포함한 부분을 찾기
-        for part in address_parts:
-            if part.endswith("시"):
-                city = part
-            elif part.endswith("구"):
-                district = part
-                
-        return city, district
-    else:
-        return None, None
-
 
 @app.route('/')
 def index():
@@ -111,6 +79,37 @@ def logout():
     # Redirect to the root index.html
     return redirect(url_for('index'))
 
+# 위치 가져오기
+@app.route('/receive_location', methods=['POST'])
+def receive_location():
+    if request.content_type != 'application/json':
+        return jsonify({'error': 'Unsupported Media Type, expected application/json'}), 415
+
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'Invalid JSON data'}), 400
+    
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+    
+    if latitude is None or longitude is None:
+        return jsonify({'error': 'Missing latitude or longitude'}), 400
+    
+    # 위도와 경도를 사용하여 x, y 좌표 계산
+    grid = getXY(latitude, longitude)
+    weathers = getWeather(grid[0], grid[1])
+    
+    # 결과를 JSON 형식으로 반환
+    return jsonify({
+        'x': grid[0],
+        'y': grid[1],
+        'humidity': weathers.get('humidity'),
+        'min_temperature': weathers.get('min_temperature'),
+        'max_temperature': weathers.get('max_temperature'),
+        'precipitation': weathers.get('precipitation')
+    })
+
+
 @app.route('/map')
 @login_required  # 로그인 상태일 때만 접근 가능
 def map():
@@ -129,7 +128,8 @@ def categorize_mosquito_risk(risk_index):
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-    #print(data)
+    print('Received data:', data)  # 디버깅을 위해 데이터 출력
+
     year = data.get('year')
     month = data.get('month')
     day = data.get('day')
@@ -138,8 +138,20 @@ def predict():
     rainfall = data.get('rainfall')
     humidity = data.get('humidity')
 
-    if not all([year, month, day, max_temp, min_temp, rainfall, humidity]):
+    # 모든 값이 존재하는지 확인
+    if year is None or month is None or day is None or \
+       max_temp is None or min_temp is None or \
+       rainfall is None or humidity is None:
         return jsonify({'error': 'Missing data'}), 400
+
+    try:
+        # 문자열을 float로 변환
+        max_temp = float(max_temp)
+        min_temp = float(min_temp)
+        rainfall = float(rainfall)
+        humidity = float(humidity)
+    except ValueError:
+        return jsonify({'error': 'Invalid number format'}), 400
 
     # 입력 데이터를 모델에 맞게 변환
     input_features = np.array([[year, month, day, max_temp, min_temp, rainfall, humidity]])
@@ -147,11 +159,18 @@ def predict():
     # 예측 수행
     mosquito_risk_index = model.predict(input_features)[0]
     mosquito_index = categorize_mosquito_risk(mosquito_risk_index)
-    
+
+    print('Prediction result:', {
+        'mosquito_risk_index': mosquito_risk_index,
+        'mosquito_index': mosquito_index
+    })
+
     return jsonify({
         'mosquito_risk_index': mosquito_risk_index,
         'mosquito_index': mosquito_index
     })
+
+
 
 @app.route('/image', methods=['GET'])
 def image():

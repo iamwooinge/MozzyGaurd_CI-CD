@@ -46,8 +46,9 @@
         <div class="left">
             <div id="date"></div>
             <br>
-            <div id="location">현재 <span id="city"></span> <span id="district"></span>에서</div>
-            <div id="mosq">모기 활동 예측값 : <span id="mosq_prediction" style="font-size: 30px;"> </span> <br>모기 지수 : <span id="mosq_index" style="font-size: 30px;"> </span></div>
+            <div id="location"><span id="city">지역 정보 Loading</span> <span id="district"></span></div>
+            <div id="weather">날씨 정보 Loading<span id=""></div>
+            <div id="mosq">모기 활동 예측값 : <span id="mosq_prediction" style="font-size: 30px;"> </span> <br>모기 지수 : <span id="mosq_index" style="font-size: 30px;"></span></div>
             <br><br>
             <div id="level">
                 <img id="mosquito-image" src="static/img/mosquito_default.png" alt="Mosquito Risk Image">
@@ -130,6 +131,7 @@
 
     <!-- Scripts -->
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d1a89afacced0ca0347cacea789b27fe"></script>
+    <script src="../static/js/weather.js"></script>
     <script src="../static/js/location.js" defer></script>
     <script src="../static/js/time.js" defer></script>
     <script src="../static/js/mosq_index_img.js" defer></script>
