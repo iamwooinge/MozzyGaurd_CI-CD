@@ -5,6 +5,30 @@ body {
     min-height: 100vh;
 }
 
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 20px;
+    margin-top: 80px;
+}
+
+.content > div {
+    flex: 1;
+    margin: 0 10px;
+}
+
 #mainNav {
     position: fixed;
     top: 0;
@@ -13,17 +37,10 @@ body {
     background-color: #000;
     color: #fff;
     z-index: 1000;
-    /* Ensure the navbar is above other content */
 }
 
-.content {
-    flex: 1;
-    display: flex;
-    justify-content: space-evenly;
-    padding: 20px;
-    /* Add padding for spacing */
-    margin-top: 80px;
-    /* Adjust this value based on the height of your navbar */
+.left {
+    text-align: center;
 }
 
 #cityButton,
@@ -33,58 +50,40 @@ body {
     font-size: 15px;
 }
 
-#cityButton:lang(ko),
-#districtButton:lang(ko) {
-    font-family: 'Noto Sans KR', sans-serif; /* 한국어일 때 Noto Sans KR 폰트 적용 */
-}
-
-#cityButton:lang(en),
-#districtButton:lang(en) {
-    font-family: 'Nunito', sans-serif; /* 영어일 때 Nunito 폰트 적용 */
-}
-
 #map {
     width: 400px;
     height: 500px;
     display: none;
-    /* Initial state hidden */
 }
 
 #info {
     margin-top: 20px;
     font-size: 16px;
     display: none;
-    /* Initial state hidden */
 }
 
 #table {
-    width: 600px;
-    height: 500px;
-    border: #000;
-    /*display: none;*/
-    /* Initial state hidden */
+    width: 570px;
+    height: auto; /* 테이블 높이를 자동으로 조절 */
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed; /* 고정된 테이블 레이아웃 */
+    display: none;
+
 }
 
-/* Signup section styling 
-.signup-section {
-    padding: 40px 0;
-    background-color: #f8f9fa;
-    text-align: center;
-}*/
-
-.signup-section .container {
-    max-width: 600px;
-    margin: auto;
+#table th, #table td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center; /* 텍스트 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
+    height: 50px; /* 테이블 셀의 높이를 줄임 */
 }
 
-.footer {
-    padding: 20px 0;
-    background-color: #000;
-    color: #fff;
-    text-align: center;
+#table th.index-header {
+    width: 80px; /* Index 열의 너비를 늘림 */
 }
 
-/* Additional text colors */
 .text-black {
     color: black;
 }
@@ -99,4 +98,25 @@ body {
 
 .text-red {
     color: red;
+}
+
+.signup-section {
+    background-color: #000;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    margin-top: 20px; /* 표와의 간격 */
+}
+
+.signup-section .container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.footer {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
 }
