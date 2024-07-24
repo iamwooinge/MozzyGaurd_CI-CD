@@ -4,8 +4,8 @@ import mysql.connector
 from mysql.connector import Error
 
 mysql_db = {
-    "user": "khj",
-    "password": "100609",
+    "user": "root",
+    "password": "0000",
     "host": "localhost",
     "port": 3306,
     "database": "mozzy_guard_db",
