@@ -7,16 +7,14 @@ import pandas as pd
 from createUser import create_user
 import checkdLogin
 from functools import wraps
-import os
+import numpy as np
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key') 
-
+app.secret_key = "mozzy_guard"
 CORS(app)
 
 # 모델 및 스케일러 로드
-model = joblib.load('models/best_rf_model.pkl')
-scaler = joblib.load('models/scaler.pkl')
+model = joblib.load('models/mosquito_model.pkl')
 
 # 로그인 상태 확인
 def login_required(f):
@@ -59,15 +57,18 @@ def geocoding_reverse(lat, lng):
     else:
         return None, None
 
-def predict_mosquito_risk(temp_high, temp_low, rainfall, humidity):
-    input_data = pd.DataFrame([[temp_high, temp_low, rainfall, humidity]], columns=['최고기온', '최저기온', '강수량(mm)', '평균습도'])
-    input_scaled = scaler.transform(input_data)
-    risk_index = model.predict(input_scaled)
-    return risk_index[0]
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/login_page')
+def login_page():
+    return render_template('userLogin.html')
+
+@app.route('/signup_page')
+def signup_page():
+    return render_template('userRegister.html')
 
 @app.route('/signup', methods=['POST'])
 def signup_route():
@@ -89,6 +90,8 @@ def login():
     user_password = data.get('password')
     result = checkdLogin.check_login(user_id, user_password)
 
+    print(user_id,user_password)
+    print(result)
     if result.get('success'):  # 로그인 성공
         session['user_id'] = user_id
         return jsonify({'message': 'Login successful', 'success': True})
@@ -103,34 +106,46 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/map')
-@login_required # 로그인 상태일 때만 접근 가능
+@login_required  # 로그인 상태일 때만 접근 가능
 def map():
     return render_template('map.html')
 
+def categorize_mosquito_risk(risk_index):
+    if risk_index < 25:
+        return 0
+    elif 25 <= risk_index < 50:
+        return 1
+    elif 50 <= risk_index < 75:
+        return 2
+    else:
+        return 3
+
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()
-    temp_high = data['temp_high']
-    temp_low = data['temp_low']
-    rainfall = data['rainfall']
-    humidity = data['humidity']
-    
-    # 모기 위험 지수 예측
-    prediction = predict_mosquito_risk(temp_high, temp_low, rainfall, humidity)
-    
-    # 예측값에 따라 mosquito_index 값 설정
-    if 0 <= prediction < 25:
-        mosquito_index = 0
-    elif 25 <= prediction < 50:
-        mosquito_index = 1
-    elif 50 <= prediction < 75:
-        mosquito_index = 2
-    else:  # prediction >= 75
-        mosquito_index = 3
-    
-    # 예측값과 모기 지수를 응답으로 반환
-    return jsonify({'mosquito_risk_index': prediction, 'mosquito_index': mosquito_index})
+    data = request.json
+    print(data)
+    year = data.get('year')
+    month = data.get('month')
+    day = data.get('day')
+    max_temp = data.get('max_temp')
+    min_temp = data.get('min_temp')
+    rainfall = data.get('rainfall')
+    humidity = data.get('humidity')
 
+    if not all([year, month, day, max_temp, min_temp, rainfall, humidity]):
+        return jsonify({'error': 'Missing data'}), 400
+
+    # 입력 데이터를 모델에 맞게 변환
+    input_features = np.array([[year, month, day, max_temp, min_temp, rainfall, humidity]])
+    
+    # 예측 수행
+    mosquito_risk_index = model.predict(input_features)[0]
+    mosquito_index = categorize_mosquito_risk(mosquito_risk_index)
+    
+    return jsonify({
+        'mosquito_risk_index': mosquito_risk_index,
+        'mosquito_index': mosquito_index
+    })
 
 @app.route('/image', methods=['GET'])
 def image():
@@ -149,6 +164,85 @@ def image():
     image_url = image_urls.get(mosquito_index, 'static/img/mosquito_default.png')
     
     return jsonify({'image_url': image_url})
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': '로그인이 필요합니다.'}), 401
+
+    user_id = session['user_id']
+
+    try:
+        connection = get_db_connection()
+        if connection is None:
+            raise Exception('Database connection failed')
+        
+        cursor = connection.cursor()
+        query = "UPDATE user SET user_subscribe = %s WHERE user_id = %s"
+        cursor.execute(query, ('Y', user_id))
+        connection.commit()
+
+        return jsonify({'success': True, 'message': '구독 신청 완료!'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error: {e}'})
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+# 구독 상태 확인 엔드포인트
+@app.route('/subscribe/status', methods=['GET'])
+def subscribe_status():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        try:
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            query = "SELECT user_subscribe FROM user WHERE user_id = %s"
+            cursor.execute(query, (user_id,))
+            result = cursor.fetchone()
+            if result:
+                return jsonify({'success': True, 'subscribed': result[0] == 'Y'})
+            else:
+                return jsonify({'success': False, 'message': 'User not found'})
+        except Error as e:
+            return jsonify({'success': False, 'message': str(e)})
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+    else:
+        return jsonify({'success': False, 'message': 'User not logged in'})
+
+# 구독 상태 토글 엔드포인트
+@app.route('/subscribe/toggle', methods=['POST'])
+def subscribe_toggle():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        try:
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            query = "SELECT user_subscribe FROM user WHERE user_id = %s"
+            cursor.execute(query, (user_id,))
+            result = cursor.fetchone()
+            if result:
+                new_status = 'N' if result[0] == 'Y' else 'Y'
+                update_query = "UPDATE user SET user_subscribe = %s WHERE user_id = %s"
+                cursor.execute(update_query, (new_status, user_id))
+                connection.commit()
+                return jsonify({'success': True, 'subscribed': new_status == 'Y'})
+            else:
+                return jsonify({'success': False, 'message': 'User not found'})
+        except Error as e:
+            return jsonify({'success': False, 'message': str(e)})
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+    else:
+        return jsonify({'success': False, 'message': 'User not logged in'})
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5500)

@@ -23,21 +23,22 @@
         <div class="main">
             <div class="col-md-6 col-sm-12">
                 <div class="login-form">
-                    <form id="loginForm" method="post">
+                    <form id="loginForm" method="post" action="#">
                         <div class="form-group">
-                            <!-- <label>User Name</label> -->
                             <input type="text" id="username" name="username" class="form-control noto"
                                 placeholder="사용자 아이디" required>
                         </div>
                         <div class="form-group">
-                            <!-- <label>Password</label> -->
                             <input type="password" id="password" name="password" class="form-control noto"
                                 placeholder="비밀번호" required>
                         </div>
                         <button type="submit" class="btn btn-black noto">로그인</button>
                         <button type="button" class="btn btn-secondary noto"
-                            onclick="location.href='../static/userRegister.html'">회원가입</button>
+                            onclick="window.location.href='/signup_page'">회원가입
+                        </button>
+
                     </form>
+
                 </div>
             </div>
         </div>
@@ -51,12 +52,14 @@
     <script>
         $(document).ready(function () {
             $('#loginForm').on('submit', function (e) {
-                e.preventDefault(); // Prevent the default form submission
+                e.preventDefault(); // 기본 폼 제출 동작을 방지
 
                 var username = $('#username').val();
                 var password = $('#password').val();
+                console.log(username);
+                console.log(password);
 
-                // Perform AJAX request
+                // AJAX 요청
                 $.ajax({
                     url: '/login',
                     method: 'POST',
@@ -64,10 +67,10 @@
                     data: JSON.stringify({ username: username, password: password }),
                     success: function (response) {
                         if (response.success) {
-                            // Redirect to userMain.html on successful login
-                            window.location.href = 'userMain.html';
+                            // 성공 시 리디렉션
+                            window.location.href = '/';
                         } else {
-                            // Display an error message
+                            // 실패 시 오류 메시지
                             alert(response.message);
                         }
                     },
@@ -77,6 +80,7 @@
                 });
             });
         });
+
     </script>
 </body>
 

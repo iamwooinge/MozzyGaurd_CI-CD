@@ -16,7 +16,7 @@ function success(position) {
             // 도시와 구를 HTML에 업데이트
             document.getElementById('city').textContent = city;
             document.getElementById('district').textContent = district;
-            document.getElementById('location').textContent = `현재 ${city} ${district}에서 모기 지수`;
+            document.getElementById('location').textContent = `현재 ${city} ${district}에서 `;
         })
         .catch(error => {
             console.error('Error fetching address:', error);

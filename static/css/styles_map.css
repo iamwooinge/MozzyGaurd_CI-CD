@@ -57,13 +57,34 @@ body {
     /* Initial state hidden */
 }
 
+#table {
+    width: 600px;
+    height: 500px;
+    border: #000;
+    /*display: none;*/
+    /* Initial state hidden */
+}
+
+/* Signup section styling 
+.signup-section {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+}*/
+
+.signup-section .container {
+    max-width: 600px;
+    margin: auto;
+}
+
 .footer {
     padding: 20px 0;
     background-color: #000;
     color: #fff;
     text-align: center;
 }
-/* styles_map.css 또는 styles.css에 추가 */
+
+/* Additional text colors */
 .text-black {
     color: black;
 }
