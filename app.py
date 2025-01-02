@@ -86,7 +86,7 @@ def receive_location():
         return jsonify({'error': 'Unsupported Media Type, expected application/json'}), 415
 
     data = request.get_json()
-    print(data);
+    print(data)
     if not data:
         return jsonify({'error': 'Invalid JSON data'}), 400
     
@@ -271,4 +271,4 @@ def subscribe_toggle():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5500)
+    app.run(debug=True, host='0.0.0.0', port=5500)
